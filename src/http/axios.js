@@ -131,7 +131,9 @@ export default function $axios(options) {
 
         //请求处理
         instance(options)
-            .then(res => resolve(res))
+            .then(res => {
+                resolve(res);
+            })
             .catch(err => reject(err));
     })
 }
