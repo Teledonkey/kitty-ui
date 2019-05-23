@@ -3,7 +3,8 @@ import axios from './axios'
 export const login = () => {
     return axios({
         url: '/login',
-        method: 'get'
+        method: 'post',
+        data
     })
 }
 
