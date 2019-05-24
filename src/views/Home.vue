@@ -11,7 +11,7 @@
         </div>
         <!-- <i class="fa fa-align-justify"></i> -->
       </el-col>
-      <el-col :span="13">
+      <el-col :span="10">
         <div class="hearNavBar">
           <el-menu
             :default-active="activeIndex"
@@ -22,13 +22,23 @@
             mode="horizontal"
             @select="handleSelectHearNavBar"
           >
-            <el-menu-item index="1">首页</el-menu-item>
-            <el-menu-item index="2">消息中心</el-menu-item>
-            <el-menu-item index="3">订单管理</el-menu-item>
+            <el-menu-item index="1">{{$t("common.home")}}</el-menu-item>
+            <el-menu-item index="2">{{$t("common.doc")}}</el-menu-item>
+            <el-menu-item index="3">{{$t("common.msgCenter")}}</el-menu-item>
           </el-menu>
         </div>
       </el-col>
-      <el-col :span="5" class="userinfo">
+      <el-col :span="6" class="userinfo">
+        <el-dropdown @command="handleCommand">
+          <span class="el-dropdown-link lang-inner">
+            <span id="language">中文</span>
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="zh_cn:中文">中文</el-dropdown-item>
+            <el-dropdown-item command="en_us:English">English</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
         <el-dropdown trigger="hover">
           <span class="el-dropdown-link userinfo-inner">
             <img :src="this.userAvatar">
@@ -36,9 +46,9 @@
           </span>
 
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>我的消息</el-dropdown-item>
-            <el-dropdown-item>设置</el-dropdown-item>
-            <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
+            <el-dropdown-item>{{$t("common.myMsg")}}</el-dropdown-item>
+            <el-dropdown-item>{{$t("common.config")}}</el-dropdown-item>
+            <el-dropdown-item divided @click.native="logout">{{$t("common.logout")}}</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-col>
@@ -59,17 +69,19 @@
             <template slot="title">
               <i class="el-icon-location"></i>
 
-              <span slot="title">系统管理</span>
+              <span slot="title">{{$t("sys.sysMng")}}</span>
             </template>
-
-            <el-menu-item index="1-1" @click="$router.push('user')">用户管理</el-menu-item>
-            <el-menu-item index="1-2" @click="$router.push('menu')">菜单管理</el-menu-item>
+            <el-menu-item index="1-1" @click="$router.push('user')">{{$t("sys.userMng")}}</el-menu-item>
+            <el-menu-item index="1-2" @click="$router.push('dept')">{{$t("sys.deptMng")}}</el-menu-item>
+            <el-menu-item index="1-3" @click="$router.push('role')">{{$t("sys.roleMng")}}</el-menu-item>
+            <el-menu-item index="1-4" @click="$router.push('menu')">{{$t("sys.menuMng")}}</el-menu-item>
+            <el-menu-item index="1-5" @click="$router.push('log')">{{$t("sys.logMng")}}</el-menu-item>
           </el-submenu>
           <el-submenu index="2">
             <template slot="title">
               <i class="el-icon-location"></i>
 
-              <span slot="title">系统监控</span>
+              <span slot="title">{{$t("sys.sysMonitor")}}</span>
             </template>
 
             <el-menu-item index="2-1" @click="$router.push('user')">服务监控</el-menu-item>
@@ -78,12 +90,12 @@
           <el-menu-item index="3" disabled>
             <i class="el-icon-document"></i>
 
-            <span slot="title">导航三</span>
+            <span slot="title">{{$t("sys.nav3")}}</span>
           </el-menu-item>
           <el-menu-item index="4">
             <i class="el-icon-setting"></i>
 
-            <span slot="title">导航四</span>
+            <span slot="title">{{$t("sys.nv4")}}</span>
           </el-menu-item>
         </el-menu>
       </aside>
@@ -132,6 +144,14 @@ export default {
     handleSelectHearNavBar(key, keyPath) {
       console.log(key, keyPath);
     },
+    // 语言切换
+    handleCommand(command) {
+      let array = command.split(":");
+      let lang = array[0] === "" ? "zh_cn" : array[0];
+      let label = array[1];
+      document.getElementById("language").innerHTML = label;
+      this.$i18n.locale = lang;
+    },
     //折叠导航栏
     collapse: function() {
       this.isCollapse = !this.isCollapse;
@@ -178,9 +198,15 @@ export default {
       text-align: right;
       padding-right: 30px;
       float: right;
+      .lang-inner {
+        font-size: 15px;
+        cursor: pointer;
+        color: #fff;
+      }
       .userinfo-inner {
         font-size: 20px;
         cursor: pointer;
+        padding-left: 15px;
         color: #fff;
         img {
           width: 40px;
@@ -202,11 +228,11 @@ export default {
       background: #4b5f6e;
       text-align: left;
       img {
-          width: 40px;
-          height: 40px;
-          border-radius: 0px;
-          margin: 10px 10px 10px 10px;
-          float: left;
+        width: 40px;
+        height: 40px;
+        border-radius: 0px;
+        margin: 10px 10px 10px 10px;
+        float: left;
       }
       .txt {
         color: #fff;
@@ -240,7 +266,7 @@ export default {
   .main {
     display: flex;
     position: absolute;
-    top: 60px;  
+    top: 60px;
     bottom: 0px;
     overflow: hidden;
     aside {
@@ -277,8 +303,8 @@ export default {
       .content-wrapper {
         background-color: #fff;
         box-sizing: border-box;
-       }
-     }
-   }
+      }
+    }
+  }
 }
 </style>
