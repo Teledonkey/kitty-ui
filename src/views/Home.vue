@@ -32,7 +32,7 @@
         <el-dropdown trigger="hover">
           <span class="el-dropdown-link userinfo-inner">
             <img :src="this.userAvatar">
-            {{username}}
+            {{userName}}
           </span>
 
           <el-dropdown-menu slot="dropdown">
@@ -113,7 +113,7 @@ export default {
     return {
       isCollapse: false,
       sysName: "kitty",
-      username: "Louis",
+      userName: "Louis",
       userAvatar: "",
       logo: "",
       activeIndex: "1"
@@ -149,8 +149,8 @@ export default {
         .catch(() => {});
     }
   },
-  mounted() {
-    this.sysName = "I like Kitty";
+  created() {
+    this.sysName = "理赔辅助系统";
     this.logo = require("@/assets/logo.png");
     var user = sessionStorage.getItem("user");
     if (user) {
@@ -161,7 +161,7 @@ export default {
 };
 </script>
 
-<style lang="sass">
+<style scoped lang="scss">
 .container {
   position: absolute;
   top: 0px;

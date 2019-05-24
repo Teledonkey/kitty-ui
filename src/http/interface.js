@@ -1,6 +1,6 @@
 import axios from './axios'
 
-export const login = () => {
+export const login = data => {
     return axios({
         url: '/login',
         method: 'post',
