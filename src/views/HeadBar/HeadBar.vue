@@ -20,6 +20,10 @@
       </el-menu>
     </span>
     <span class="tool-bar">
+      <!-- 主题切换 -->
+      <ThemePicker class="theme-picker"></ThemePicker>
+      <!-- 语言切换 -->
+      <LangSelector class="lang-selector"></LangSelector>
       <!-- 用户信息 -->
       <el-dropdown class="user-info-dropdown" trigger="hover">
         <span class="el-dropdown-link">
@@ -38,9 +42,11 @@
 
 <script>
 import mock from "@/mock/index.js";
+import ThemePicker from "@/components/ThemePicker";
 import LangSelector from "@/components/LangSelector";
 export default {
   components: {
+    ThemePicker,
     LangSelector
   },
   data() {
@@ -54,14 +60,6 @@ export default {
   methods: {
     selectNavBar(key, keyPath) {
       console.log(key, keyPath);
-    },
-    // 语言切换
-    handleCommand(command) {
-      let array = command.split(":");
-      let lang = array[0] === "" ? "zh_cn" : array[0];
-      let label = array[1];
-      document.getElementById("language").innerHTML = label;
-      this.$i18n.locale = lang;
     },
     //折叠导航栏
     collapse: function() {
