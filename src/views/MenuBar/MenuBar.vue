@@ -1,18 +1,18 @@
 <template>
   <div class="menu-bar-container">
     <!-- logo -->
-    <div class="logo" :class="isCollapse?'menu-bar-collapse-width':'menu-bar-width'">
+    <div class="logo" :class="collapse?'menu-bar-collapse-width':'menu-bar-width'">
       <img :src="this.logo">
-      <div>{{isCollapse?'':sysName}}</div>
+      <div>{{collapse?'':appName}}</div>
     </div>
     <!-- 导航菜单 -->
     <el-menu
       default-active="1-1"
-      :class="isCollapse?'menu-bar-collapse-width':'menu-bar-width'"
+      :class="collapse?'menu-bar-collapse-width':'menu-bar-width'"
+      :collapse="collapse"
       @open="handleopen"
       @close="handleclose"
       @select="handleselect"
-      :collapse="isCollapse"
     >
       <el-submenu index="1">
         <template slot="title">
@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default {
   data() {
     return {
@@ -51,6 +52,12 @@ export default {
       sysName: "",
       logo: ""
     };
+  },
+  computed: {
+    ...mapState({
+      appName: state => state.app.appName,
+      collapse: state => state.app.collapse
+    })
   },
   methods: {
     handleopen() {

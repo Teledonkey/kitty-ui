@@ -1,14 +1,15 @@
 <template>
-  <div class="container">
+  <div class="container" :class="$store.state.app.collapse?'menu-bar-collapse-width':'menu-bar-width'">
     <!-- 导航菜单隐藏显示切换 -->
-    <span class="collapse-switcher" @click.prevent="collapse">
-      <i class="el-icon-menu"></i>
+    <span class="collapse-switcher">
+      <Hamburger :toggleClick="collapse" :isActive="$store.state.collapse"></Hamburger>
     </span>
     <!-- 导航菜单 -->
     <span class="nav-bar">
       <el-menu
         :default-active="activeIndex"
         class="el-menu-demo"
+        background-color="#545c64"
         text-color="#fff"
         active-text-color="#ffd04b"
         mode="horizontal"
@@ -44,14 +45,15 @@
 import mock from "@/mock/index.js";
 import ThemePicker from "@/components/ThemePicker";
 import LangSelector from "@/components/LangSelector";
+import Hamburger from "@/components/Hamburger"
 export default {
   components: {
     ThemePicker,
-    LangSelector
+    LangSelector,
+    Hamburger
   },
   data() {
     return {
-      isCollapse: false,
       username: "Louis",
       userAvatar: "",
       activeIndex: "1"
@@ -63,7 +65,7 @@ export default {
     },
     //折叠导航栏
     collapse: function() {
-      this.isCollapse = !this.isCollapse;
+      this.$store.commit("collapse");
     },
     //退出登录
     logout: function() {
@@ -140,5 +142,11 @@ export default {
       }
     }
   }
+}
+.menu-bar-width {
+  left: 200px;
+}
+.menu-bar-collapse-width {
+  left: 65px;
 }
 </style>
