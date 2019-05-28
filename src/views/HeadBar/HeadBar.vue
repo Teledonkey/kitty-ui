@@ -1,15 +1,19 @@
 <template>
-  <div class="container" :class="$store.state.app.collapse?'menu-bar-collapse-width':'menu-bar-width'">
+  <div
+    class="container"
+    :style="{'background':themeColor}"
+    :class="collapse?'menu-bar-collapse-width':'menu-bar-width'"
+  >
     <!-- 导航菜单隐藏显示切换 -->
-    <span class="collapse-switcher">
-      <Hamburger :toggleClick="collapse" :isActive="$store.state.collapse"></Hamburger>
+    <span class="hamburger-container" :style="{'background':themeColor}">
+      <Hamburger :onClick="onCollapse" :isActive="collapse"></Hamburger>
     </span>
     <!-- 导航菜单 -->
     <span class="nav-bar">
       <el-menu
         :default-active="activeIndex"
         class="el-menu-demo"
-        background-color="#545c64"
+        :style="{'background-color':themeColor}"
         text-color="#fff"
         active-text-color="#ffd04b"
         mode="horizontal"
@@ -22,7 +26,7 @@
     </span>
     <span class="tool-bar">
       <!-- 主题切换 -->
-      <ThemePicker class="theme-picker"></ThemePicker>
+      <ThemePicker class="theme-picker" @onThemeChange="onThemeChange"></ThemePicker>
       <!-- 语言切换 -->
       <LangSelector class="lang-selector"></LangSelector>
       <!-- 用户信息 -->
@@ -45,7 +49,8 @@
 import mock from "@/mock/index.js";
 import ThemePicker from "@/components/ThemePicker";
 import LangSelector from "@/components/LangSelector";
-import Hamburger from "@/components/Hamburger"
+import Hamburger from "@/components/Hamburger";
+import { mapState } from "vuex";
 export default {
   components: {
     ThemePicker,
@@ -64,8 +69,8 @@ export default {
       console.log(key, keyPath);
     },
     //折叠导航栏
-    collapse: function() {
-      this.$store.commit("collapse");
+    onCollapse: function() {
+      this.$store.commit("onCollapse");
     },
     //退出登录
     logout: function() {
@@ -78,7 +83,17 @@ export default {
           this.$router.push("/login");
         })
         .catch(() => {});
+    },
+    // 切换主题
+    onThemeChange: function(themeColor, oldThemeColor) {
+      this.$store.dispatch("onThemeChange", { themeColor, oldThemeColor });
     }
+  },
+  computed: {
+    ...mapState({
+      themeColor: state => state.app.themeColor,
+      collapse: state => state.app.collapse
+    })
   },
   mounted() {
     this.sysName = "I like Kitty";
@@ -108,7 +123,16 @@ export default {
     border-right-width: 1px;
     border-right-style: solid;
     color: white;
-    background: #504e6180;
+  }
+  .hamburger-container {
+    width: 40px;
+    float: left;
+    border-color: rgba(238, 241, 241, 0.747);
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-right-width: 1px;
+    border-right-style: solid;
+    color: white;
   }
   .nav-bar {
     margin-left: auto;

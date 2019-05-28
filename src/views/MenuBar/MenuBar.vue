@@ -1,7 +1,11 @@
 <template>
   <div class="menu-bar-container">
     <!-- logo -->
-    <div class="logo" :class="collapse?'menu-bar-collapse-width':'menu-bar-width'">
+    <div
+      class="logo"
+      :style="{'background-color':themeColor}"
+      :class="collapse?'menu-bar-collapse-width':'menu-bar-width'"
+    >
       <img :src="this.logo">
       <div>{{collapse?'':appName}}</div>
     </div>
@@ -44,7 +48,7 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -56,6 +60,7 @@ export default {
   computed: {
     ...mapState({
       appName: state => state.app.appName,
+      themeColor: state=>state.app.themeColor,
       collapse: state => state.app.collapse
     })
   },
