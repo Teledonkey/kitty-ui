@@ -52,7 +52,7 @@ export default {
         account: this.loginForm.account,
         password: this.loginForm.password
       };
-      this.$api
+      this.$api.login
         .login(JSON.stringify(userInfo))
         .then(res => {
           Cookies.set("token", res.data.token);

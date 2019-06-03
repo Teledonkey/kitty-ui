@@ -20,7 +20,7 @@ const router = new Router({
       component: Home,
       children: [
         { path: '', component: Intro, name: '系统介绍' },
-        { path: '/user', component: User, name: '用户管理' },
+        { path: '/sys/user', component: User, name: '用户管理' },
         { path: '/dept', component: Dept, name: '机构管理' },
         { path: '/role', component: Role, name: '角色管理' },
         { path: '/menu', component: Menu, name: '菜单管理' },
