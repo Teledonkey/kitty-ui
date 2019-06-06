@@ -4,11 +4,9 @@ import Login from '@/views/Login'
 import NotFound from '@/views/404'
 import Home from '@/views/Home'
 import Intro from '@/views/Intro'
-import User from '@/views/SysMng/User'
-import Dept from '@/views/SysMng/Dept'
-import Role from '@/views/SysMng/Role'
-import Menu from '@/views/SysMng/Menu'
-import Log from '@/views/SysMng/Log'
+
+import api from '@/http/api'
+import store from '@/store'
 
 Vue.use(Router)
 
@@ -19,12 +17,7 @@ const router = new Router({
       name: '首页',
       component: Home,
       children: [
-        { path: '', component: Intro, name: '系统介绍' },
-        { path: '/sys/user', component: User, name: '用户管理' },
-        { path: '/dept', component: Dept, name: '机构管理' },
-        { path: '/role', component: Role, name: '角色管理' },
-        { path: '/menu', component: Menu, name: '菜单管理' },
-        { path: '/log', component: Log, name: '日志管理' }
+        { path: '', component: Intro, name: '系统介绍' }
       ]
     },
     {
@@ -56,9 +49,76 @@ router.beforeEach((to, from, next) => {
     if (!user) {
       next({ path: '/login' })
     } else {
+      // 加载动态菜单和路由
+      addDynamicMenuAndRoutes()
       next()
     }
   }
 })
+
+/**
+* 加载动态菜单和路由
+*/
+function addDynamicMenuAndRoutes() {
+  if (store.state.app.menuRouteLoaded) {
+    console.log("动态菜单和路由已经存在")
+    return
+  }
+  api.menu.findMenuTree()
+    .then((res) => {
+      store.commit('setMenuTree', res.data)
+      // 添加动态路由
+      let dynamicRoutes = addDynamicRoutes(res.data)
+      router.options.routes[0].children = router.options.routes[0].children.concat(dynamicRoutes)
+      router.addRoutes(router.options.routes);
+      store.commit('menuRouteLoaded',true)
+    })
+    .catch(function (res) {
+      alert(res);
+    });
+}
+
+/**
+* 添加动态(菜单)路由
+* @param {*} menuList 菜单列表
+* @param {*} routes 递归创建的动态(菜单)路由
+*/
+function addDynamicRoutes(menuList = [], routes = []) {
+  var temp = []
+  for (var i = 0; i < menuList.length; i++) {
+    if (menuList[i].children && menuList[i].children.length >= 1) {
+      temp = temp.concat(menuList[i].children)
+    } else if (menuList[i].url && /\S/.test(menuList[i].url)) {
+      menuList[i].url = menuList[i].url.replace(/^\//, '')
+      // 创建路由配置
+      var route = {
+        path: menuList[i].url,
+        component: null,
+        name: menuList[i].name,
+        meta: {
+          menuId: menuList[i].menuId,
+          title: menuList[i].name,
+          isDynamic: true,
+          isTab: true,
+          iframeUrl: ''
+        }
+      }
+      try {
+        // 根据菜单URL动态加载vue组件，这里要求vue组件须按照url路径存储
+        // 如url="sys/user"，则组件路径应是"@/views/sys/user.vue",否则组件加载不到
+        let array = menuList[i].url.split('/')
+        let url = array[0].substring(0, 1).toUpperCase() + array[0].substring(1) + '/' + array[1].substring(0, 1).toUpperCase() + array[1].substring(1)
+        route['component'] = () => import(`@/views/${url}`)
+      } catch (e) { }
+      routes.push(route)
+    }
+  }
+  if (temp.length >= 1) {
+    addDynamicRoutes(temp, routes)
+  } else {
+    console.log('这是动态路由' + routes)
+  }
+  return routes
+}
 
 export default router

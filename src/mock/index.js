@@ -19,6 +19,8 @@ function fnCreate (mod, isOpen = true) {
     for (var key in mod) {
       ((res) => {
         if (res.isOpen !== false) {
+          let baseUrl = 'http://localhost:8080'
+          let url = baseUrl + res.url
           Mock.mock(res.url, res.type, res.data)
         }
       })(mod[key]() || {})

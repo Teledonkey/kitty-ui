@@ -218,7 +218,7 @@ const menuTreeData = {
 }
 export function findTree() {
   return {
-    url: 'http://localhost:8080/menu/findTree',
+    url: 'findTree',
     type: 'get',
     data: menuTreeData
   }
